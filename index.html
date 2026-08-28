@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Organize a wildlife-removal request and explore introductions to independent local providers.">
+  <title>Wildlife Match | Local Wildlife-Removal Introductions</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <script src="config/site-config.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/animations.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <aside class="site-rail" aria-label="Site identity">
+    <a class="rail-mark" href="#top" aria-label="Wildlife Match home"><img src="favicon.svg" width="52" height="52" alt=""></a>
+    <a class="rail-wordmark" href="#top"><span>Wildlife</span> <em>Match</em></a>
+    <span class="rail-line" aria-hidden="true"></span>
+    <p class="rail-support" data-config="supportLine">Local help for a wilder world.</p>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span class="sr-only">Open menu</span></button>
+  </aside>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <div class="mobile-menu__head"><img src="favicon.svg" width="54" height="54" alt=""><button class="menu-close" type="button" aria-label="Close menu">×</button></div>
+    <nav aria-label="Mobile navigation">
+      <details class="mobile-services"><summary>Services</summary><div class="mobile-services__links"><a href="wildlife-removal.html">Wildlife Removal</a><a href="attic-cleanup-restoration.html">Attic Cleanup &amp; Restoration</a><a href="entry-point-sealing-prevention.html">Entry Point Sealing &amp; Prevention</a><a class="mobile-services__all" href="#services">All services →</a></div></details><a href="#how-it-works">How it works</a><a href="#about">About</a><a href="#faq">FAQ</a><a href="#request">Contact</a>
+    </nav>
+    <a class="button button--terracotta" href="#request">Tell us what’s happening</a>
+    <p class="mobile-menu__disclosure">Independent referral platform. Provider response and availability vary.</p>
+  </div>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <img class="hero__photo hero__photo--garden-top" src="img/home/hero-garden.webp" width="1536" height="1024" fetchpriority="high" alt="Squirrel outside in a landscaped residential yard">
+      <img class="hero__photo hero__photo--wall" src="img/home/hero-wall.webp" width="1024" height="1536" fetchpriority="high" alt="" aria-hidden="true">
+      <img class="hero__photo hero__photo--roof" src="img/home/hero-roof.webp" width="1536" height="1024" fetchpriority="high" alt="Bird resting outside on a residential roof">
+      <img class="hero__photo hero__photo--interior-top" src="img/home/hero-interior.webp" width="1536" height="1024" fetchpriority="high" alt="Warm sunlit living room">
+
+      <div class="hero__band">
+        <p class="hero__brand" aria-hidden="true"><strong>Wildlife</strong> <em>Match</em></p>
+        <div class="hero__copy">
+          <h1 id="hero-title"><span>Wildlife belongs outside.</span><span>Your home should feel like home.</span></h1>
+          <p>Describe what you are seeing, hearing or noticing. Wildlife Match may introduce the request to independent local providers.</p>
+        </div>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#request">Tell us what’s happening</a>
+          <a class="button button--outline" href="#services">Explore services</a>
+        </div>
+      </div>
+
+      <img class="hero__photo hero__photo--garden-bottom" src="img/generated/home-hero-garden-bottom-v2.webp" width="1536" height="1024" alt="" aria-hidden="true">
+      <img class="hero__photo hero__photo--interior-bottom" src="img/generated/home-hero-interior-bottom-v2.webp" width="1536" height="1024" alt="" aria-hidden="true">
+      <a class="projecting-tab hero__floating-request" href="#request">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="11" width="32" height="29" rx="1"></rect><path d="M15 7v8M33 7v8M8 19h32M16 26h3M24 26h3M32 26h1M16 33h3M24 33h3"></path></svg>
+        <span>Start your request</span>
+      </a>
+    </section>
+
+    <nav class="hero__dock shared-header" aria-label="Homepage sections">
+      <div class="hero__dock-links shared-header__links">
+        <a href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 15.5 16 6l11 9.5V27H19v-7h-6v7H5Z"></path></svg><span>Home</span></a>
+        <a href="#about"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 5C15 6 8 11 8 20c0 3 2 6 5 7 7-2 12-9 12-22Z"></path><path d="M7 27c3-7 7-11 14-16"></path></svg><span>About us</span></a>
+        <a href="#how-it-works"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="10" cy="11" r="4"></circle><circle cx="22" cy="11" r="4"></circle><path d="M3 26v-4c0-4 3-6 7-6s7 2 7 6v4M16 18c2-2 4-2 6-2 4 0 7 2 7 6v4H18"></path></svg><span>How it works</span></a>
+        <a href="#why-it-matters"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 27 8v7c0 7-4 11-11 14C9 26 5 22 5 15V8Z"></path></svg><span>Why it matters</span></a>
+        <a href="#request"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="7" width="24" height="18" rx="1"></rect><path d="m5 9 11 9L27 9"></path></svg><span>Contact</span></a>
+      </div>
+      <details class="services-dropdown hero__dock-next shared-header__services"><summary><span>Services</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></summary><div class="services-dropdown__panel"><a href="wildlife-removal.html"><span>Wildlife Removal</span><small>Animals in or around the structure</small></a><a href="attic-cleanup-restoration.html"><span>Attic Cleanup &amp; Restoration</span><small>Debris, odor and disturbed insulation</small></a><a href="entry-point-sealing-prevention.html"><span>Entry Point Sealing &amp; Prevention</span><small>Exterior gaps, vents and recurring access</small></a><a class="services-dropdown__all" href="#services"><span>All services</span><small>View the complete services section →</small></a></div></details>
+    </nav>
+
+    <section class="section services" id="services" aria-labelledby="services-title">
+      <header class="services__heading"><h2 id="services-title">Start with what’s <em>happening</em></h2><p>Choose the situation that most closely matches what you’re noticing around the home.</p></header>
+      <article class="service-tile service-tile--wildlife"><img src="img/home/service-wildlife.webp" width="1536" height="1024" loading="lazy" alt="Raccoon outdoors beside a home"><div class="editorial-label"><h3>Wildlife <em>Removal</em></h3><p>Activity involving raccoons, squirrels, bats, birds or other wildlife in or around the structure.</p><a class="button button--primary service-link" href="wildlife-removal.html">Explore wildlife removal</a></div></article>
+      <article class="service-tile service-tile--attic"><img src="img/home/service-attic.webp" width="1536" height="1024" loading="lazy" alt="Bright attic cleanup work"><div class="editorial-label"><h3>Attic Cleanup &amp; <em>Restoration</em></h3><p>Assessment and cleanup considerations for nesting material, droppings, odor and disturbed insulation.</p><a class="button button--primary service-link" href="attic-cleanup-restoration.html">Explore attic services</a></div></article>
+      <article class="service-tile service-tile--sealing"><img src="img/home/service-sealing.webp" width="1536" height="1024" loading="lazy" alt="Sealed residential soffit vent"><div class="editorial-label"><h3>Entry Point Sealing &amp; <em>Prevention</em></h3><p>Exterior gaps, vents, soffits and other openings that may need exclusion or repair.</p><a class="button button--primary service-link" href="entry-point-sealing-prevention.html">Explore sealing services</a></div></article>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section process" id="how-it-works" aria-labelledby="process-title">
+      <img class="process__tracks" src="img/home/process-tracks.webp" alt="Wildlife tracks near a home exterior">
+      <header class="process__heading"><h2 id="process-title">A clearer path from <em>concern to conversation</em></h2><p>Share what you’re noticing once. Wildlife Match organizes the request and may introduce it to independent providers serving your area.</p></header>
+      <div class="process__steps">
+        <article><h3>Describe the situation</h3><p>Tell us where activity is happening, what you have seen or heard, and when it began.</p></article>
+        <article><h3>Your request is organized</h3><p>The details are structured so relevant independent providers can understand the starting point.</p></article>
+        <article><h3>Providers may respond</h3><p>Interested providers may contact you to discuss inspection, options and next steps. Response is not guaranteed.</p></article>
+      </div>
+      <img class="process__inspection" src="img/home/process-inspection.webp" alt="Provider examining a roof edge from outside">
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section signs" id="signs" aria-labelledby="signs-title">
+      <header class="signs__heading"><h2 id="signs-title">What are you <em>noticing?</em></h2><p>Small clues can help explain where activity may be happening. Select the description closest to your situation.</p></header>
+      <img class="signs__main" src="img/home/signs-exterior.webp" alt="Upper exterior and landscaped garden of a home">
+      <img class="signs__vent" src="img/home/signs-vent.webp" alt="Disturbed exterior vent">
+      <img class="signs__nest" src="img/home/signs-nesting.webp" alt="Nesting material near an exterior edge">
+      <ul class="signs__labels"><li>Sounds above the ceiling</li><li>Movement near the roofline</li><li>Odor or staining</li><li>Damaged vents or soffits</li><li>Tracks around the property</li><li>Nesting material</li></ul>
+      <a class="projecting-tab signs__cta" href="#request">Describe what you noticed</a>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section matters" id="why-it-matters" aria-labelledby="matters-title">
+      <header class="matters__heading"><h2 id="matters-title">Protect the home <em>without losing respect for wildlife</em></h2><p>Early attention may help homeowners understand entry points, contamination concerns and repair needs while independent providers explain available options.</p></header>
+      <img class="matters__wildlife" src="img/home/matters-wildlife.webp" alt="Squirrel outdoors in a garden">
+      <img class="matters__attic" src="img/home/matters-attic.webp" alt="Clean attic insulation">
+      <img class="matters__edge" src="img/home/matters-edge.webp" alt="Protected exterior roof edge">
+      <div class="matters__manifesto">Inside protected.<br>Outside respected.</div>
+      <div class="matters__topics"><article><h3>Home protection</h3><p>Openings and disturbed materials may allow repeated activity or weather exposure.</p></article><article><h3>Health considerations</h3><p>Droppings, nesting material and damaged insulation may require careful assessment and cleanup.</p></article><article><h3>Humane decision-making</h3><p>Ask providers to explain removal methods, exclusion timing and species-specific considerations.</p></article></div>
+      <p class="matters__safety"><strong>Do not enter unsafe areas.</strong> Avoid approaching wildlife, disturbing nesting animals, climbing roofs or handling droppings without appropriate guidance and protection.</p>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section prepare" id="prepare" aria-labelledby="prepare-title">
+      <header class="prepare__heading"><h2 id="prepare-title">A few details make the first conversation <em>more useful</em></h2><p>You do not need to diagnose the species. Record what you can safely observe and leave risky areas undisturbed.</p></header>
+      <img class="prepare__table" src="img/home/prepare-table.webp" alt="Phone, notes, gloves and flashlight used to document exterior activity safely">
+      <img class="prepare__photo" src="img/home/prepare-safe-photo.webp" alt="Homeowner photographing a roofline from the ground">
+      <ul class="prepare__list"><li>Where activity seems to occur</li><li>What you saw, heard or smelled</li><li>When it happens and how often</li><li>Photos taken from a safe position</li><li>Visible exterior damage</li><li>Pets, children or access concerns</li></ul>
+      <a class="projecting-tab prepare__cta" href="#request">Start your request</a>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <img class="about__photo" src="img/home/about-conversation.webp" alt="Provider and homeowner discussing an exterior area">
+      <header class="about__intro"><h2 id="about-title">Local knowledge. <em>Your decision.</em></h2><p>Wildlife Match is an independent referral platform. It may introduce a request to providers serving the area, but it does not perform, supervise or guarantee wildlife work.</p></header>
+      <div class="about__points"><article><h3>Independent providers</h3><p>Providers operate independently and set their own inspections, methods, pricing and availability.</p></article><article><h3>Verify before work begins</h3><p>Ask about licensing, insurance, species-specific rules, written scope and warranties.</p></article><article><h3>No guaranteed response</h3><p>Introductions depend on location, provider interest and project details.</p></article></div>
+      <aside class="about__collaborate"><h3 data-config="advertiseTitle">Advertise &amp; Collaborate</h3><p data-config="advertiseBody">Wildlife-removal providers and related home-service businesses may contact us to discuss advertising, referral or collaboration opportunities. Participation does not imply endorsement, guaranteed leads or exclusive placement.</p></aside>
+      <p class="about__nonendorsement">Wildlife Match does not endorse a provider merely because an introduction or advertising relationship exists.</p>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+      <header class="faq__heading">
+        <p class="eyebrow">Useful answers</p>
+        <h2 id="faq-title">Questions before <em>the next step</em></h2>
+        <p>Clear expectations help homeowners have a more useful first conversation with an independent provider.</p>
+      </header>
+      <dl class="faq__list">
+        <div class="faq__item"><dt>What does Wildlife Match do?</dt><dd>Wildlife Match organizes your request and may introduce it to independent providers serving your area.</dd></div>
+        <div class="faq__item"><dt>Does Wildlife Match perform inspections or removal?</dt><dd>No. Wildlife Match is a referral platform, not a contractor. Providers independently assess the situation and perform any agreed work.</dd></div>
+        <div class="faq__item"><dt>Is a provider response guaranteed?</dt><dd>No. Responses depend on your location, provider availability and the details of the request.</dd></div>
+        <div class="faq__item"><dt>How much will the work cost?</dt><dd>Independent providers set their own pricing after discussing or assessing the scope. Ask for a written estimate before work begins.</dd></div>
+        <div class="faq__item"><dt>What details should I share?</dt><dd>Describe where and when you notice activity, visible signs and any photos taken from a safe position. Do not enter unsafe areas or approach wildlife.</dd></div>
+        <div class="faq__item"><dt>What should I verify before hiring a provider?</dt><dd>Ask about licensing, insurance, methods, species-specific rules, the written scope, follow-up and warranties.</dd></div>
+      </dl>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section class="request" id="request" aria-labelledby="request-title">
+      <img class="request__photo" src="img/home/request-garden.webp" alt="Squirrel outside in a residential garden">
+      <form class="request__form" action="handler.php" method="post" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="csrf_token" value="">
+        <label class="hp" aria-hidden="true">Leave empty<input name="website" tabindex="-1" autocomplete="off"></label>
+        <header><h2 id="request-title">Tell us <em>what’s happening</em></h2><p>Share the starting details. Your request may be introduced to independent providers serving your area.</p></header>
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Email address<input type="email" name="email" autocomplete="email" required></label>
+        <label>ZIP code<input name="zip" inputmode="numeric" autocomplete="postal-code" required></label>
+        <label>Service needed<select name="service" required><option value="">Select a service</option><option>Wildlife Removal</option><option>Attic Cleanup & Restoration</option><option>Entry Point Sealing & Prevention</option></select></label>
+        <label class="request__message">What are you noticing?<textarea name="message" rows="5" placeholder="Describe what you’re seeing and where." required></textarea></label>
+        <label class="request__upload"><span><strong>Add photos (optional)</strong><small>Upload images to help providers understand the situation.</small></span><input type="file" name="photos[]" accept="image/jpeg,image/png,image/webp" multiple></label>
+        <label class="request__consent"><input type="checkbox" name="consent" required><span data-config="consentLabel">I agree to share my request details with independent providers who may contact me with more information.</span></label>
+        <button class="request__submit" type="submit">Send my request<small>Submitting does not guarantee a provider response, estimate or service availability.</small></button>
+        <p class="form-status" role="status" aria-live="polite" hidden></p>
+        <p class="nonjs-success" id="request-success">Thank you! We have successfully received your request. Our team will review your information and get back to you shortly.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><strong class="footer-brand">Wildlife <em>Match</em></strong><p data-config="supportLine">Local help for a wilder world.</p><a data-config-href="email" href="mailto:hello@example.com" data-config="email">hello@example.com</a><address data-config="address">Configure address</address></div>
+    <nav aria-label="Services"><strong>Services</strong><a href="wildlife-removal.html">Wildlife Removal</a><a href="attic-cleanup-restoration.html">Attic Cleanup &amp; Restoration</a><a href="entry-point-sealing-prevention.html">Entry Point Sealing &amp; Prevention</a></nav>
+    <nav aria-label="Company"><strong>Company</strong><a href="#about">About us</a><a href="#how-it-works">How it works</a><a href="#why-it-matters">Why it matters</a><a href="#faq">FAQ</a></nav>
+    <nav aria-label="Legal"><strong>Legal</strong><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a><a href="cookie-policy.html">Cookie Policy</a></nav>
+    <p class="site-footer__disclaimer"><strong>Disclaimer:</strong> This website is a free service that helps users connect with independent local service providers. The website owner and operator do not perform, supervise, direct, or guarantee any work. All contractors and service providers are independent businesses. This website does not warrant or guarantee estimates, availability, licensing status, workmanship, project outcomes, or services performed. Users are solely responsible for verifying that any provider they hire holds all licenses, insurance, permits, certifications, and other credentials required for the work. Any person depicted in a photograph or video is an actor or model unless expressly identified otherwise and is not necessarily a contractor or service provider available through this website.</p>
+    <div class="site-footer__bottom"><span>Independent referral platform. Providers operate independently.</span><span>© <span data-config="copyrightYear">2026</span> <span data-config="companyName">CONFIGURE LEGAL OPERATOR</span></span></div>
+  </footer>
+
+  <div class="cookie-banner" role="dialog" aria-label="Cookie preferences" hidden><p>We use essential storage for site functions. No optional analytics or advertising scripts are currently loaded.</p><button data-cookie="accept">Accept optional</button><button data-cookie="reject">Reject optional</button><a href="cookie-policy.html">Manage preferences</a></div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+Read 00_START_HERE.md first, then read every numbered specification file and inspect every image in references/ at original size before editing any code.
+
+Implement the complete website inside starter/. This is an implementation task, not a planning task. The visual references are binding layouts, not moodboards. references/01-home-hero-LOCKED.png is immutable and has the highest priority.
+
+Work section by section in the order required by 06_VISUAL_QA_CONTRACT.md. After each stage, render 1440px and 390px screenshots, compare them against the mapped reference, correct visual drift, and only then continue. Do not replace the layered photographic compositions with cards, ordinary split layouts, or a generic header.
+
+Finish every HTML page, local image asset, CSS file, JavaScript interaction, config value, PHP form handler and legal page. Do not stop at scaffolding or ask for approval between stages unless a genuine blocker prevents completion.
