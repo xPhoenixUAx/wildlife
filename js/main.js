@@ -2,7 +2,14 @@
   const cfg = window.SITE_CONFIG || {};
   const defaultBrand = 'Wildlife Match';
   const brand = String(cfg.brand || defaultBrand).trim() || defaultBrand;
-  const configText = { ...cfg, companyName: cfg.company, copyrightYear: new Date().getFullYear() };
+  const configText = {
+    ...cfg,
+    companyName: cfg.company,
+    copyrightYear: new Date().getFullYear(),
+    legalLastUpdated: cfg.legal?.lastUpdated,
+    governingLaw: cfg.legal?.governingLaw,
+    legalVenue: cfg.legal?.venue
+  };
   document.querySelectorAll('[data-config]').forEach((el) => {
     const key = el.dataset.config;
     if (configText[key] != null) el.textContent = configText[key];

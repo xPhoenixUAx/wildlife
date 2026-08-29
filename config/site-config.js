@@ -11,6 +11,12 @@ window.SITE_CONFIG = {
   "supportLine": "Local help for a wilder world.",
   "consentLabel": "I agree to share my request details with independent providers who may contact me with more information.",
 
+  "legal": {
+    "lastUpdated": "August 29, 2026",
+    "governingLaw": "CONFIGURE GOVERNING LAW",
+    "venue": "CONFIGURE LEGAL VENUE"
+  },
+
   "pageTitles": {
     "index.html": "{brand} | Local Wildlife-Removal Introductions",
     "wildlife-removal.html": "Wildlife Removal | {brand}",

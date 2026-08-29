@@ -59,6 +59,22 @@ function text_length(string $value): int {
     return function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
 }
 
+function image_mime_type(string $path): string {
+    if (class_exists('finfo')) {
+        $detector = new finfo(FILEINFO_MIME_TYPE);
+        return (string) $detector->file($path);
+    }
+    if (function_exists('getimagesize')) {
+        $details = @getimagesize($path);
+        return is_array($details) ? (string) ($details['mime'] ?? '') : '';
+    }
+    return '';
+}
+
+function is_placeholder_email(string $email): bool {
+    return str_ends_with(strtolower($email), '@example.com');
+}
+
 function render_confirmation(string $brand, string $logo): never {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     $fields = ['name', 'email', 'zip', 'service', 'message'];
@@ -144,15 +160,14 @@ if (!in_array($service, $allowedServices, true)) respond(422, false, 'Select a v
 if ($message === '') respond(422, false, 'Describe what you are noticing.');
 if (!isset($_POST['consent'])) respond(422, false, 'Consent is required to share the request.');
 $destinationEmail = trim((string) ($handlerConfig['recipient'] ?? ''));
-if (!filter_var($destinationEmail, FILTER_VALIDATE_EMAIL)) respond(500, false, 'The request destination has not been configured.');
+if (!filter_var($destinationEmail, FILTER_VALIDATE_EMAIL) || is_placeholder_email($destinationEmail)) respond(500, false, 'The request destination has not been configured.');
 $senderEmail = trim((string) ($handlerConfig['sender'] ?? ''));
-if (!filter_var($senderEmail, FILTER_VALIDATE_EMAIL)) respond(500, false, 'The request sender has not been configured.');
+if (!filter_var($senderEmail, FILTER_VALIDATE_EMAIL) || is_placeholder_email($senderEmail)) respond(500, false, 'The request sender has not been configured.');
 
 $files = $_FILES['photos'] ?? null;
 $attachments = [];
 if ($files && is_array($files['name'] ?? null)) {
     if (count($files['name']) > MAX_FILES) respond(422, false, 'Upload no more than three images.');
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
     $allowedMime = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
     foreach ($files['name'] as $index => $unused) {
         $error = (int) ($files['error'][$index] ?? UPLOAD_ERR_NO_FILE);
@@ -160,7 +175,7 @@ if ($files && is_array($files['name'] ?? null)) {
         $tmp = (string) ($files['tmp_name'][$index] ?? '');
         $size = (int) ($files['size'][$index] ?? 0);
         if ($error !== UPLOAD_ERR_OK || $size < 1 || $size > MAX_FILE_BYTES || !is_uploaded_file($tmp)) respond(422, false, 'One of the images could not be accepted.');
-        $mime = (string) $finfo->file($tmp);
+        $mime = image_mime_type($tmp);
         if (!isset($allowedMime[$mime])) respond(422, false, 'Only JPG, PNG and WebP images are accepted.');
         $attachments[] = ['path' => $tmp, 'mime' => $mime, 'name' => bin2hex(random_bytes(12)) . '.' . $allowedMime[$mime]];
     }
@@ -184,6 +199,6 @@ if ($attachments) {
     $body = $plain;
 }
 
-if (!@mail($destinationEmail, $subject, $body, implode("\r\n", $headers))) respond(500, false, 'We could not send the request. Please try again later.');
+if (!function_exists('mail') || !@mail($destinationEmail, $subject, $body, implode("\r\n", $headers))) respond(500, false, 'We could not send the request. Please try again later.');
 $_SESSION['last_submit_at'] = time();
 respond(200, true, SUCCESS_MESSAGE);
