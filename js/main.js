@@ -195,6 +195,14 @@
     if (typeof formModal.close === 'function') formModal.close();
     else formModal.removeAttribute('open');
   });
+  const modalPreview = new URLSearchParams(window.location.search).get('formModal');
+  const isLocalPreview = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  if (isLocalPreview && ['success', 'error'].includes(modalPreview)) {
+    const previewMessage = modalPreview === 'error'
+      ? 'We could not send the request. Please try again later.'
+      : '';
+    setTimeout(() => showFormModal(modalPreview, previewMessage), 180);
+  }
 
   document.querySelectorAll('.request__form').forEach((form) => form.addEventListener('submit', async (e) => {
     e.preventDefault();
