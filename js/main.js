@@ -1,26 +1,81 @@
 (() => {
   const cfg = window.SITE_CONFIG || {};
+  const defaultBrand = 'Wildlife Match';
+  const brand = String(cfg.brand || defaultBrand).trim() || defaultBrand;
+  const configText = { ...cfg, companyName: cfg.company, copyrightYear: new Date().getFullYear() };
   document.querySelectorAll('[data-config]').forEach((el) => {
     const key = el.dataset.config;
-    if (cfg[key] != null) el.textContent = cfg[key];
+    if (configText[key] != null) el.textContent = configText[key];
   });
   document.querySelectorAll('[data-config-href="email"]').forEach((el) => { if (cfg.email) el.href = `mailto:${cfg.email}`; });
+  const pageName = window.location.pathname.split('/').pop() || 'index.html';
+  const pageTitle = cfg.pageTitles?.[pageName];
+  document.title = pageTitle
+    ? String(pageTitle).split('{brand}').join(brand)
+    : document.title.split(defaultBrand).join(brand);
+
+  const replaceBrand = (value) => String(value).split(defaultBrand).join(brand);
+  if (brand !== defaultBrand) {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => ['SCRIPT', 'STYLE', 'TEXTAREA'].includes(node.parentElement?.tagName)
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT
+    });
+    const brandNodes = [];
+    while (walker.nextNode()) brandNodes.push(walker.currentNode);
+    brandNodes.forEach((node) => { node.nodeValue = replaceBrand(node.nodeValue); });
+    document.querySelectorAll('[aria-label],[title],[alt]').forEach((el) => {
+      ['aria-label', 'title', 'alt'].forEach((attribute) => {
+        if (el.hasAttribute(attribute)) el.setAttribute(attribute, replaceBrand(el.getAttribute(attribute)));
+      });
+    });
+    document.querySelectorAll('meta[content]').forEach((meta) => { meta.content = replaceBrand(meta.content); });
+  }
+
+  const brandParts = brand.split(/\s+/);
+  const brandLead = brandParts.shift() || brand;
+  const brandAccent = brandParts.join(' ');
+  document.querySelectorAll('.rail-wordmark').forEach((wordmark) => {
+    wordmark.replaceChildren();
+    const lead = document.createElement('span');
+    lead.textContent = brandLead;
+    wordmark.append(lead);
+    if (brandAccent) {
+      wordmark.append(document.createTextNode(' '));
+      const accent = document.createElement('em');
+      accent.textContent = brandAccent;
+      wordmark.append(accent);
+    }
+  });
+  document.querySelectorAll('.footer-brand,.hero__brand').forEach((wordmark) => {
+    wordmark.replaceChildren();
+    const lead = wordmark.matches('.hero__brand') ? document.createElement('strong') : document.createTextNode(brandLead);
+    if (lead.nodeType === Node.ELEMENT_NODE) lead.textContent = brandLead;
+    wordmark.append(lead);
+    if (brandAccent) {
+      wordmark.append(document.createTextNode(' '));
+      const accent = document.createElement('em');
+      accent.textContent = brandAccent;
+      wordmark.append(accent);
+    }
+  });
+
+  if (cfg.logo) {
+    document.querySelectorAll('.rail-mark img,.mobile-menu__head img,.cookie-banner__mark img').forEach((image) => { image.src = cfg.logo; });
+    document.querySelectorAll('link[rel~="icon"]').forEach((icon) => {
+      icon.href = cfg.logo;
+      icon.removeAttribute('type');
+    });
+  }
   if (cfg.disclaimer) document.querySelectorAll('.site-footer').forEach((footer) => {
     if (footer.querySelector('.site-footer__disclaimer')) return;
     const disclaimer = document.createElement('p');
     disclaimer.className = 'site-footer__disclaimer';
     const label = document.createElement('strong');
     label.textContent = 'Disclaimer:';
-    disclaimer.append(label, document.createTextNode(` ${cfg.disclaimer}`));
+    const disclaimerText = String(cfg.disclaimer).replace(/^Disclaimer:\s*/i, '');
+    disclaimer.append(label, document.createTextNode(` ${disclaimerText}`));
     footer.querySelector('.site-footer__bottom')?.before(disclaimer);
-  });
-  if (cfg.footerLinks) document.querySelectorAll('.site-footer nav[aria-label]').forEach((nav) => {
-    const links = cfg.footerLinks[nav.getAttribute('aria-label')];
-    if (!links) return;
-    const heading = nav.querySelector('strong')?.cloneNode(true);
-    nav.replaceChildren();
-    if (heading) nav.append(heading);
-    links.forEach(([label, href]) => { const link=document.createElement('a'); link.textContent=label; link.href=href; nav.append(link); });
   });
   const requestedService = new URLSearchParams(window.location.search).get('service');
   if (requestedService) document.querySelectorAll('select[name="service"]').forEach((select) => {
@@ -28,7 +83,7 @@
   });
   const refreshCsrfToken = () => {
     if (!document.querySelector('input[name="csrf_token"]')) return Promise.resolve();
-    return fetch('csrf.php', { headers: { Accept: 'application/json' } })
+    return fetch('handler.php?action=csrf', { headers: { Accept: 'application/json' } })
       .then((response) => { if (!response.ok) throw new Error('CSRF unavailable'); return response.json(); })
       .then((data) => document.querySelectorAll('input[name="csrf_token"]').forEach((el) => { el.value = data.token || ''; }))
       .catch(() => {});
@@ -165,9 +220,9 @@
   });
 
   const banner = document.querySelector('.cookie-banner');
-  const saved = localStorage.getItem('wm-cookie-choice');
+  const saved = localStorage.getItem('site-cookie-choice');
   if (banner && !saved) banner.hidden = false;
-  banner?.addEventListener('click', (e) => { const choice=e.target.dataset.cookie; if (!choice) return; localStorage.setItem('wm-cookie-choice',choice); banner.hidden=true; });
+  banner?.addEventListener('click', (e) => { const choice=e.target.dataset.cookie; if (!choice) return; localStorage.setItem('site-cookie-choice',choice); banner.hidden=true; });
 
   const formModal = document.querySelector('#form-modal');
   const modalEyebrow = formModal?.querySelector('[data-form-modal-eyebrow]');
@@ -195,15 +250,6 @@
     if (typeof formModal.close === 'function') formModal.close();
     else formModal.removeAttribute('open');
   });
-  const modalPreview = new URLSearchParams(window.location.search).get('formModal');
-  const isLocalPreview = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
-  if (isLocalPreview && ['success', 'error'].includes(modalPreview)) {
-    const previewMessage = modalPreview === 'error'
-      ? 'We could not send the request. Please try again later.'
-      : '';
-    setTimeout(() => showFormModal(modalPreview, previewMessage), 180);
-  }
-
   document.querySelectorAll('.request__form').forEach((form) => form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const status = form.querySelector('.form-status');
