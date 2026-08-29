@@ -5,8 +5,6 @@ window.SITE_CONFIG = Object.freeze({
   formDestinationEmail: 'CONFIGURE DESTINATION EMAIL',
   supportLine: 'Local help for a wilder world.',
   consentLabel: 'I agree to share my request details with independent providers who may contact me with more information.',
-  advertiseTitle: 'Advertise & Collaborate',
-  advertiseBody: 'Wildlife-removal providers and related home-service businesses may contact us to discuss advertising, referral or collaboration opportunities. Participation does not imply endorsement, guaranteed leads or exclusive placement.',
   disclaimer: 'This website is a free service that helps users connect with independent local service providers. The website owner and operator do not perform, supervise, direct, or guarantee any work. All contractors and service providers are independent businesses. This website does not warrant or guarantee estimates, availability, licensing status, workmanship, project outcomes, or services performed. Users are solely responsible for verifying that any provider they hire holds all licenses, insurance, permits, certifications, and other credentials required for the work. Any person depicted in a photograph or video is an actor or model unless expressly identified otherwise and is not necessarily a contractor or service provider available through this website.',
   footerLinks: {
     Services: [

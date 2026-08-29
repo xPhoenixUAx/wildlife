@@ -23,3 +23,90 @@ form,form>*{min-width:0}input[type="file"]{max-width:100%;overflow:hidden}
   .rail-line{height:26%;min-height:180px;margin-top:40px}
   .rail-support{margin-top:18px}
 }
+
+/* Compact, branded cookie-consent card. */
+.cookie-banner{
+  left:auto;
+  right:max(22px,calc((100vw - var(--max))/2 + 22px));
+  bottom:22px;
+  width:min(620px,calc(100vw - var(--rail-w) - 54px));
+  max-height:calc(100svh - 44px);
+  display:grid;
+  grid-template-columns:1fr;
+  align-items:stretch;
+  gap:20px;
+  overflow-y:auto;
+  padding:24px 26px 22px;
+  background:var(--ivory-50);
+  border:1px solid rgba(12,59,36,.2);
+  border-top:4px solid var(--gold);
+  box-shadow:0 24px 60px rgba(12,59,36,.28);
+  animation:cookie-consent-in .34s cubic-bezier(.22,.8,.34,1) both;
+}
+.cookie-banner[hidden]{display:none}
+.cookie-banner__intro{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:start}
+.cookie-banner__mark{display:grid;place-items:center;width:54px;height:54px;background:var(--forest-900);box-shadow:inset 0 0 0 1px rgba(226,185,78,.5)}
+.cookie-banner__mark img{width:34px;height:34px}
+.cookie-banner__eyebrow{margin:0 0 6px!important;color:var(--terracotta);font-size:.67rem;font-weight:700;letter-spacing:.15em;line-height:1.2;text-transform:uppercase}
+.cookie-banner h2{margin:0 0 8px;font-size:clamp(1.45rem,2vw,1.8rem);line-height:1.05;letter-spacing:-.025em}
+.cookie-banner #cookie-description{max-width:58ch;margin:0;color:var(--muted);font-size:.78rem;line-height:1.55}
+.cookie-banner__actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:stretch;padding-top:18px;border-top:1px solid var(--line)}
+.cookie-banner button,.cookie-banner__actions a{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:11px 16px;border:1px solid var(--forest-900);background:transparent;color:var(--forest-950);font-size:.78rem;font-weight:700;line-height:1.2;text-align:center;text-decoration:none;transition:background-color .18s ease,color .18s ease,border-color .18s ease}
+.cookie-banner [data-cookie="accept"]{background:var(--forest-800);color:var(--white);border-color:var(--forest-800)}
+.cookie-banner [data-cookie="accept"]:hover{background:var(--forest-900);border-color:var(--forest-900)}
+.cookie-banner [data-cookie="reject"]:hover{background:var(--ivory-200)}
+.cookie-banner__actions a{gap:7px;padding-inline:10px;border-color:transparent;text-decoration:underline;text-decoration-color:var(--terracotta);text-underline-offset:5px}
+.cookie-banner__actions a:hover{color:var(--terracotta-dark)}
+@keyframes cookie-consent-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+@media(max-width:767.98px){
+  .cookie-banner{left:14px;right:14px;bottom:14px;width:auto;max-height:calc(100svh - 28px);gap:18px;padding:21px 20px 18px}
+  .cookie-banner__intro{grid-template-columns:46px minmax(0,1fr);gap:14px}
+  .cookie-banner__mark{width:46px;height:46px}.cookie-banner__mark img{width:30px;height:30px}
+  .cookie-banner h2{font-size:1.38rem}.cookie-banner #cookie-description{font-size:.74rem;line-height:1.5}
+  .cookie-banner__actions{grid-template-columns:1fr 1fr;gap:9px;padding-top:16px}
+  .cookie-banner button{padding:10px;min-height:50px}
+  .cookie-banner__actions a{grid-column:1/-1;justify-self:start;min-height:38px;padding:6px 2px}
+  .mobile-menu nav>a,.mobile-services summary{font-size:clamp(1.47rem,7vw,2.24rem)}
+}
+@media(max-width:439px){
+  .cookie-banner{padding:19px 18px 16px}
+  .cookie-banner__intro{display:block}.cookie-banner__mark{display:none}
+  .cookie-banner__actions{grid-template-columns:1fr}
+  .cookie-banner__actions a{grid-column:1}
+}
+@media(prefers-reduced-motion:reduce){.cookie-banner{animation:none}}
+
+/* Smooth navigation disclosure states. */
+.mobile-menu{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition:opacity .24s ease,transform .36s cubic-bezier(.22,.8,.34,1);
+  will-change:opacity,transform;
+}
+.mobile-menu.is-opening,.mobile-menu.is-closing{opacity:0;transform:translate3d(18px,0,0);pointer-events:none}
+
+.services-dropdown__panel{transform-origin:top right;transition:opacity .22s ease,transform .24s cubic-bezier(.22,.8,.34,1),visibility .22s}
+.services-dropdown--up .services-dropdown__panel{transform-origin:bottom right}
+.services-dropdown.is-opening .services-dropdown__panel,
+.services-dropdown.is-closing .services-dropdown__panel{opacity:0;visibility:visible;pointer-events:none;transform:translateY(-10px) scale(.985)}
+.services-dropdown--up.is-opening .services-dropdown__panel,
+.services-dropdown--up.is-closing .services-dropdown__panel{transform:translateY(10px) scale(.985)}
+.services-dropdown.is-closing summary svg{transform:rotate(0)}
+
+.mobile-services__links{
+  max-height:0;
+  margin-block:0;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-8px);
+  transition:max-height .34s cubic-bezier(.22,.8,.34,1),opacity .2s ease,transform .28s ease,margin .34s ease;
+}
+.mobile-services.is-expanded .mobile-services__links{max-height:var(--mobile-services-height,360px);margin-block:14px 12px;opacity:1;transform:none}
+.mobile-services summary::after{transition:transform .28s ease}
+.mobile-services:not(.is-expanded) summary::after{content:"+";transform:rotate(0)}
+.mobile-services.is-expanded summary::after{content:"−";transform:rotate(180deg)}
+
+@media(prefers-reduced-motion:reduce){
+  .mobile-menu,.services-dropdown__panel,.mobile-services__links,.mobile-services summary::after{transition-duration:.01ms!important}
+}

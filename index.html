@@ -134,7 +134,6 @@
       <img class="about__photo" src="img/home/about-conversation.webp" alt="Provider and homeowner discussing an exterior area">
       <header class="about__intro"><h2 id="about-title">Local knowledge. <em>Your decision.</em></h2><p>Wildlife Match is an independent referral platform. It may introduce a request to providers serving the area, but it does not perform, supervise or guarantee wildlife work.</p></header>
       <div class="about__points"><article><h3>Independent providers</h3><p>Providers operate independently and set their own inspections, methods, pricing and availability.</p></article><article><h3>Verify before work begins</h3><p>Ask about licensing, insurance, species-specific rules, written scope and warranties.</p></article><article><h3>No guaranteed response</h3><p>Introductions depend on location, provider interest and project details.</p></article></div>
-      <aside class="about__collaborate"><h3 data-config="advertiseTitle">Advertise &amp; Collaborate</h3><p data-config="advertiseBody">Wildlife-removal providers and related home-service businesses may contact us to discuss advertising, referral or collaboration opportunities. Participation does not imply endorsement, guaranteed leads or exclusive placement.</p></aside>
       <p class="about__nonendorsement">Wildlife Match does not endorse a provider merely because an introduction or advertising relationship exists.</p>
     </section>
 
@@ -187,6 +186,17 @@
     <div class="site-footer__bottom"><span>Independent referral platform. Providers operate independently.</span><span>© <span data-config="copyrightYear">2026</span> <span data-config="companyName">CONFIGURE LEGAL OPERATOR</span></span></div>
   </footer>
 
-  <div class="cookie-banner" role="dialog" aria-label="Cookie preferences" hidden><p>We use essential storage for site functions. No optional analytics or advertising scripts are currently loaded.</p><button data-cookie="accept">Accept optional</button><button data-cookie="reject">Reject optional</button><a href="cookie-policy.html">Manage preferences</a></div>
+  <div class="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-description" hidden><div class="cookie-banner__intro"><span class="cookie-banner__mark" aria-hidden="true"><img src="favicon.svg" width="34" height="34" alt=""></span><div><p class="cookie-banner__eyebrow">Your privacy choices</p><h2 id="cookie-title">A quick note about cookies</h2><p id="cookie-description">We use essential storage for site functions. No optional analytics or advertising scripts are currently loaded.</p></div></div><div class="cookie-banner__actions"><button type="button" data-cookie="accept">Allow optional</button><button type="button" data-cookie="reject">Essential only</button><a href="cookie-policy.html">Cookie policy <span aria-hidden="true">↗</span></a></div></div>
+
+  <dialog class="form-modal" id="form-modal" aria-labelledby="form-modal-title" aria-describedby="form-modal-message">
+    <div class="form-modal__panel">
+      <button class="form-modal__close" type="button" data-form-modal-close aria-label="Close message">×</button>
+      <span class="form-modal__icon" aria-hidden="true"></span>
+      <p class="form-modal__eyebrow" data-form-modal-eyebrow>Request received</p>
+      <h2 id="form-modal-title" data-form-modal-title>Your request has been received</h2>
+      <p id="form-modal-message" data-form-modal-message>Thank you. Your details were submitted successfully.</p>
+      <button class="button button--primary form-modal__action" type="button" data-form-modal-close>Done</button>
+    </div>
+  </dialog>
 </body>
 </html>
