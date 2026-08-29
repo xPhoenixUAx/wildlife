@@ -76,7 +76,7 @@
   :is(.shared-header.shared-header,.service-header.service-header) .services-dropdown__panel a{justify-content:flex-start}
 }
 
-@media (max-width:1099px) and (min-width:768px){
+@media (max-width:1100px) and (min-width:768px){
   :is(.shared-header.shared-header,.service-header.service-header) :is(.shared-header__links,.service-header__links){
     grid-column:1/10;
     padding:0 8px!important;
@@ -90,6 +90,6 @@
   :is(.shared-header.shared-header,.service-header.service-header) :is(.shared-header__services,.service-header__cta){display:block!important}
 }
 
-@media (max-width:767px){
+@media (max-width:767.98px){
   :is(.shared-header.shared-header,.service-header.service-header){display:none!important}
 }

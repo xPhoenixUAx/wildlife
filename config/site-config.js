@@ -2,7 +2,6 @@ window.SITE_CONFIG = Object.freeze({
   siteName: 'Wildlife Match',
   companyName: 'CONFIGURE LEGAL OPERATOR',
   email: 'hello@example.com',
-  address: 'CONFIGURE POSTAL ADDRESS',
   formDestinationEmail: 'CONFIGURE DESTINATION EMAIL',
   supportLine: 'Local help for a wilder world.',
   consentLabel: 'I agree to share my request details with independent providers who may contact me with more information.',
