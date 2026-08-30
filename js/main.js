@@ -16,13 +16,9 @@
   });
   document.querySelectorAll('[data-config-href="email"]').forEach((el) => { if (cfg.email) el.href = `mailto:${cfg.email}`; });
   const pageName = window.location.pathname.split('/').pop() || 'index.html';
-  const pageTitle = cfg.pageTitles?.[pageName];
-  document.title = pageTitle
-    ? String(pageTitle).split('{brand}').join(brand)
-    : document.title.split(defaultBrand).join(brand);
 
   const replaceBrand = (value) => String(value).split(defaultBrand).join(brand);
-  if (brand !== defaultBrand) {
+  if (brand !== defaultBrand && !document.documentElement.hasAttribute('data-config-rendered')) {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
       acceptNode: (node) => ['SCRIPT', 'STYLE', 'TEXTAREA'].includes(node.parentElement?.tagName)
         ? NodeFilter.FILTER_REJECT
@@ -37,6 +33,20 @@
       });
     });
     document.querySelectorAll('meta[content]').forEach((meta) => { meta.content = replaceBrand(meta.content); });
+  }
+
+  const configuredText = (value) => String(value).split('{brand}').join(brand);
+  const pageTitle = cfg.pageTitles?.[pageName];
+  if (pageTitle != null) document.title = configuredText(pageTitle);
+  const pageDescription = cfg.pageDescriptions?.[pageName];
+  if (pageDescription != null) {
+    let description = document.querySelector('meta[name="description"]');
+    if (!description) {
+      description = document.createElement('meta');
+      description.name = 'description';
+      document.head.append(description);
+    }
+    description.content = configuredText(pageDescription);
   }
 
   const brandParts = brand.split(/\s+/);
@@ -74,15 +84,23 @@
       icon.removeAttribute('type');
     });
   }
-  if (cfg.disclaimer) document.querySelectorAll('.site-footer').forEach((footer) => {
-    if (footer.querySelector('.site-footer__disclaimer')) return;
-    const disclaimer = document.createElement('p');
+  if (cfg.disclaimer != null) document.querySelectorAll('.site-footer').forEach((footer) => {
+    const existing = footer.querySelector('.site-footer__disclaimer');
+    const disclaimerText = configuredText(cfg.disclaimer).replace(/^Disclaimer:\s*/i, '').trim();
+    if (!disclaimerText) {
+      existing?.remove();
+      return;
+    }
+    const disclaimer = existing || document.createElement('p');
     disclaimer.className = 'site-footer__disclaimer';
     const label = document.createElement('strong');
     label.textContent = 'Disclaimer:';
-    const disclaimerText = String(cfg.disclaimer).replace(/^Disclaimer:\s*/i, '');
-    disclaimer.append(label, document.createTextNode(` ${disclaimerText}`));
-    footer.querySelector('.site-footer__bottom')?.before(disclaimer);
+    disclaimer.replaceChildren(label, document.createTextNode(` ${disclaimerText}`));
+    if (!existing) {
+      const bottom = footer.querySelector('.site-footer__bottom');
+      if (bottom) bottom.before(disclaimer);
+      else footer.append(disclaimer);
+    }
   });
   const requestedService = new URLSearchParams(window.location.search).get('service');
   if (requestedService) document.querySelectorAll('select[name="service"]').forEach((select) => {
@@ -232,7 +250,6 @@
   banner?.addEventListener('click', (e) => { const choice=e.target.dataset.cookie; if (!choice) return; localStorage.setItem('site-cookie-choice',choice); banner.hidden=true; });
 
   const formModal = document.querySelector('#form-modal');
-  const modalEyebrow = formModal?.querySelector('[data-form-modal-eyebrow]');
   const modalTitle = formModal?.querySelector('[data-form-modal-title]');
   const modalMessage = formModal?.querySelector('[data-form-modal-message]');
   const modalAction = formModal?.querySelector('.form-modal__action');
@@ -240,7 +257,6 @@
     if (!formModal) return;
     const isSuccess = state === 'success';
     formModal.dataset.state = state;
-    modalEyebrow.textContent = isSuccess ? 'Request received' : 'Submission problem';
     modalTitle.textContent = isSuccess ? 'Your request has been received' : 'We couldn’t send your request';
     modalMessage.textContent = message || (isSuccess
       ? 'Thank you. Your details were submitted successfully. A provider response is not guaranteed.'

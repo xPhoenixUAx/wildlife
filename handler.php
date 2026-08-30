@@ -1,12 +1,6 @@
 <?php
 declare(strict_types=1);
 ini_set('display_errors', '0');
-session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS'])]);
-session_start();
-
-header('X-Content-Type-Options: nosniff');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Cache-Control: no-store');
 
 const MAX_FILES = 3;
 const MAX_FILE_BYTES = 5_000_000;
@@ -28,6 +22,145 @@ function load_site_config(): array {
     }
     if (!is_array($config)) throw new RuntimeException('Site configuration is invalid.');
     return $config;
+}
+
+function site_pages(): array {
+    return ['index.html', 'wildlife-removal.html', 'attic-cleanup-restoration.html',
+        'entry-point-sealing-prevention.html', 'privacy.html', 'terms.html', 'cookie-policy.html'];
+}
+
+function render_site_html(string $page, array $config): string {
+    if (!in_array($page, site_pages(), true)) throw new RuntimeException('Unknown page.');
+    $source = file_get_contents(__DIR__ . '/' . $page);
+    if ($source === false) throw new RuntimeException('Page template is unavailable.');
+
+    $document = new DOMDocument('1.0', 'UTF-8');
+    $previousErrors = libxml_use_internal_errors(true);
+    try {
+        $loaded = $document->loadHTML('<?xml encoding="UTF-8">' . $source, LIBXML_NONET);
+    } finally {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previousErrors);
+    }
+    if (!$loaded) throw new RuntimeException('Page template is invalid.');
+    foreach (iterator_to_array($document->childNodes) as $child) {
+        if ($child->nodeType === XML_PI_NODE) $document->removeChild($child);
+    }
+    $xpath = new DOMXPath($document);
+    $classQuery = static fn(string $class): string =>
+        'contains(concat(" ", normalize-space(@class), " "), " ' . $class . ' ")';
+    $setText = static function (DOMNode $node, string $text) use ($document): void {
+        while ($node->firstChild) $node->removeChild($node->firstChild);
+        $node->appendChild($document->createTextNode($text));
+    };
+    $brand = trim((string) ($config['brand'] ?? 'Wildlife Match')) ?: 'Wildlife Match';
+    $format = static fn(string $text): string => str_replace('{brand}', $brand, $text);
+
+    // Update existing template text without interpreting config values as HTML.
+    foreach ($xpath->query('//text()[not(ancestor::script) and not(ancestor::style) and not(ancestor::textarea)]') as $node) {
+        $node->nodeValue = str_replace('Wildlife Match', $brand, $node->nodeValue);
+    }
+    foreach ($xpath->query('//*[@aria-label or @title or @alt]') as $element) {
+        foreach (['aria-label', 'title', 'alt'] as $attribute) {
+            if ($element->hasAttribute($attribute)) {
+                $element->setAttribute($attribute, str_replace('Wildlife Match', $brand, $element->getAttribute($attribute)));
+            }
+        }
+    }
+    foreach ($xpath->query('//meta[@content]') as $meta) {
+        $meta->setAttribute('content', str_replace('Wildlife Match', $brand, $meta->getAttribute('content')));
+    }
+
+    $textValues = array_merge($config, [
+        'companyName' => $config['company'] ?? null,
+        'copyrightYear' => date('Y'),
+        'legalLastUpdated' => $config['legal']['lastUpdated'] ?? null,
+        'governingLaw' => $config['legal']['governingLaw'] ?? null,
+        'legalVenue' => $config['legal']['venue'] ?? null
+    ]);
+    foreach ($xpath->query('//*[@data-config]') as $element) {
+        $value = $textValues[$element->getAttribute('data-config')] ?? null;
+        if (is_scalar($value)) $setText($element, (string) $value);
+    }
+    foreach ($xpath->query('//*[@data-config-href="email"]') as $element) {
+        if (!empty($config['email'])) $element->setAttribute('href', 'mailto:' . $config['email']);
+    }
+
+    $brandParts = preg_split('/\s+/u', $brand, 2);
+    foreach (['rail-wordmark' => 'span', 'footer-brand' => null, 'hero__brand' => 'strong'] as $class => $leadTag) {
+        foreach ($xpath->query('//*[' . $classQuery($class) . ']') as $wordmark) {
+            $setText($wordmark, '');
+            $lead = $document->createTextNode($brandParts[0]);
+            if ($leadTag !== null) {
+                $wrapper = $document->createElement($leadTag);
+                $wrapper->appendChild($lead);
+                $lead = $wrapper;
+            }
+            $wordmark->appendChild($lead);
+            if (isset($brandParts[1])) {
+                $accent = $document->createElement('em');
+                $accent->appendChild($document->createTextNode($brandParts[1]));
+                $wordmark->appendChild($document->createTextNode(' '));
+                $wordmark->appendChild($accent);
+            }
+        }
+    }
+
+    if (!empty($config['logo'])) {
+        foreach ($xpath->query('//*[' . $classQuery('rail-mark') . ' or ' . $classQuery('mobile-menu__head') . ' or ' . $classQuery('cookie-banner__mark') . ']//img') as $image) {
+            $image->setAttribute('src', (string) $config['logo']);
+        }
+        foreach ($xpath->query('//link[contains(concat(" ", normalize-space(@rel), " "), " icon ")]') as $icon) {
+            $icon->setAttribute('href', (string) $config['logo']);
+            $icon->removeAttribute('type');
+        }
+    }
+
+    if (isset($config['disclaimer'])) {
+        $text = trim(preg_replace('/^Disclaimer:\s*/i', '', $format((string) $config['disclaimer'])) ?? '');
+        foreach ($xpath->query('//*[' . $classQuery('site-footer') . ']') as $footer) {
+            $disclaimer = $xpath->query('.//*[' . $classQuery('site-footer__disclaimer') . ']', $footer)->item(0);
+            if ($text === '') {
+                if ($disclaimer) $disclaimer->parentNode->removeChild($disclaimer);
+                continue;
+            }
+            if (!$disclaimer) {
+                $disclaimer = $document->createElement('p');
+                $disclaimer->setAttribute('class', 'site-footer__disclaimer');
+                $bottom = $xpath->query('./*[' . $classQuery('site-footer__bottom') . ']', $footer)->item(0);
+                $footer->insertBefore($disclaimer, $bottom);
+            }
+            $setText($disclaimer, '');
+            $label = $document->createElement('strong');
+            $setText($label, 'Disclaimer:');
+            $disclaimer->appendChild($label);
+            $disclaimer->appendChild($document->createTextNode(' ' . $text));
+        }
+    }
+
+    $head = $document->getElementsByTagName('head')->item(0);
+    if (isset($config['pageTitles'][$page])) {
+        $title = $document->getElementsByTagName('title')->item(0);
+        if (!$title) $title = $head->appendChild($document->createElement('title'));
+        $setText($title, $format((string) $config['pageTitles'][$page]));
+    }
+    if (isset($config['pageDescriptions'][$page])) {
+        $description = $xpath->query('//meta[@name="description"]')->item(0);
+        if (!$description) {
+            $description = $head->appendChild($document->createElement('meta'));
+            $description->setAttribute('name', 'description');
+        }
+        $description->setAttribute('content', $format((string) $config['pageDescriptions'][$page]));
+    }
+    // A new config URL prevents stale browser settings from overriding fresh HTML.
+    $configVersion = substr(hash('sha256', json_encode($config, JSON_THROW_ON_ERROR)), 0, 16);
+    foreach ($xpath->query('//script[@src="config/site-config.js"]') as $script) {
+        $script->setAttribute('src', 'config/site-config.js?v=' . $configVersion);
+    }
+    $document->documentElement->setAttribute('data-config-rendered', 'true');
+    $html = $document->saveHTML();
+    if ($html === false) throw new RuntimeException('Page could not be rendered.');
+    return $html;
 }
 
 function fallback_location(): string {
@@ -90,7 +223,7 @@ function render_confirmation(string $brand, string $logo): never {
     $safeLogo = htmlspecialchars($logo, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $favicon = $safeLogo !== '' ? '<link rel="icon" href="' . $safeLogo . '">' : '';
     header('Content-Type: text/html; charset=utf-8');
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirm request | ' . $safeBrand . '</title>' . $favicon . '<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/legal.css"></head><body><main class="legal-main"><a class="legal-back" href="' . $returnTo . '#request">← Return to the form</a><p class="eyebrow">' . $safeBrand . '</p><h1>Confirm your request</h1><p>This confirmation protects the form when JavaScript is unavailable. Optional photographs must be reselected after returning to the form; they are not carried through this confirmation.</p><form method="post" action="handler.php">' . $hidden . '<input type="hidden" name="return_to" value="' . $returnTo . '"><input type="hidden" name="csrf_token" value="' . $token . '"><button class="button button--primary" type="submit">Confirm and send</button></form></main></body></html>';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirm request | ' . $safeBrand . '</title>' . $favicon . '<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/legal.css"></head><body><main class="legal-main"><a class="legal-back" href="' . $returnTo . '#request">← Return to the form</a><h1>Confirm your request</h1><p>This confirmation protects the form when JavaScript is unavailable. Optional photographs must be reselected after returning to the form; they are not carried through this confirmation.</p><form method="post" action="handler.php">' . $hidden . '<input type="hidden" name="return_to" value="' . $returnTo . '"><input type="hidden" name="csrf_token" value="' . $token . '"><button class="button button--primary" type="submit">Confirm and send</button></form></main></body></html>';
     exit;
 }
 
@@ -116,6 +249,34 @@ function rate_limited(string $ip): bool {
 }
 
 $method = (string) ($_SERVER['REQUEST_METHOD'] ?? '');
+$requestPath = rawurldecode((string) parse_url($_SERVER['REQUEST_URI'] ?? '/handler.php', PHP_URL_PATH));
+$requestedPage = PHP_SAPI === 'cli-server'
+    ? ltrim($requestPath, '/')
+    : (str_ends_with($requestPath, '/') ? '' : basename($requestPath));
+if ($requestedPage === '') $requestedPage = 'index.html';
+if (in_array($method, ['GET', 'HEAD'], true) && in_array($requestedPage, site_pages(), true)) {
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Cache-Control: no-store');
+    header('Content-Type: text/html; charset=UTF-8');
+    try {
+        $html = render_site_html($requestedPage, load_site_config());
+        if ($method !== 'HEAD') echo $html;
+    } catch (Throwable $error) {
+        error_log('Site rendering failed: ' . $error->getMessage());
+        http_response_code(503);
+        if ($method !== 'HEAD') echo 'The website is temporarily unavailable.';
+    }
+    exit;
+}
+// Run locally with: php -S 127.0.0.1:8080 handler.php
+if (PHP_SAPI === 'cli-server' && $requestPath !== '/handler.php') return false;
+
+session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS'])]);
+session_start();
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Cache-Control: no-store');
 if ($method === 'GET' && ($_GET['action'] ?? '') === 'csrf') {
     if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     header('Content-Type: application/json; charset=utf-8');

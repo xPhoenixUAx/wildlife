@@ -1,0 +1,5 @@
+# Apache 2.4 with mod_rewrite and AllowOverride FileInfo.
+# Keep public URLs and query strings intact; render page templates via PHP.
+RewriteEngine On
+RewriteRule ^$ handler.php [END]
+RewriteRule ^(?:index|wildlife-removal|attic-cleanup-restoration|entry-point-sealing-prevention|privacy|terms|cookie-policy)\.html$ handler.php [END]
