@@ -50,7 +50,7 @@ body {
   background-color: var(--wm-green-dark);
   background-image:
     linear-gradient(rgba(16, 37, 23, 0.28), rgba(16, 37, 23, 0.46)),
-    url("../img/generated/site-container-background-v1.webp");
+    url("../img/photos/site-container-background-v1.webp");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -3940,7 +3940,7 @@ input[type="checkbox"] {
   position: absolute;
   z-index: -2;
   inset: 0;
-  background: url("../img/generated/signs-cta-parallax-v1.webp") 62% center / cover no-repeat;
+  background: url("../img/photos/signs-cta-parallax-v1.webp") 62% center / cover no-repeat;
   background-attachment: fixed;
   transform: none;
 }
@@ -5654,7 +5654,7 @@ html.motion-enabled.motion-page-ready :is(.shared-header.shared-header, .service
         rgba(8, 27, 15, 0.96) 68%,
         #102f1d 100%
       ),
-      url("../img/generated/home-hero-raccoon-closeup-v5.webp");
+      url("../img/photos/home-hero-raccoon-closeup-v5.webp");
     background-color: #102f1d;
     background-position: center, center top;
     background-size: 100% 100%, 100% auto;
