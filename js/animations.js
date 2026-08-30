@@ -31,8 +31,6 @@
     mark(document.querySelector('.hero__photo--garden-top'), 'image-right', 80, true);
     mark(document.querySelector('.service-hero__title'), 'left', 40, true);
     mark(document.querySelector('.service-hero__subject'), 'image-right', 90, true);
-    mark(document.querySelector('.service-hero__exterior'), 'image-right', 150, true);
-    mark(document.querySelector('.service-hero__detail'), 'image-right', 210, true);
     mark(document.querySelector('.legal-hero'), 'rise', 40, true);
 
     document.querySelectorAll('main > section:not(.hero):not(.service-hero) > header').forEach((header) => {
@@ -63,12 +61,9 @@
       ['.process__inspection', 'image-right'],
       ['.signs-cta-banner__inner', 'rise'],
       ['.matters__wildlife', 'image-left'],
-      ['.matters__attic', 'image-right'],
-      ['.matters__edge', 'image-left'],
       ['.matters__manifesto', 'rise'],
       ['.matters__safety', 'rise'],
       ['.visual-story__panorama', 'image-left'],
-      ['.prepare__table', 'image-left'],
       ['.prepare__photo', 'image-right'],
       ['.prepare__cta', 'rise'],
       ['.about__photo', 'image-left'],

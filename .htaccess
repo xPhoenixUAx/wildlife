@@ -3,3 +3,22 @@
 RewriteEngine On
 RewriteRule ^$ handler.php [END]
 RewriteRule ^(?:index|wildlife-removal|attic-cleanup-restoration|entry-point-sealing-prevention|privacy|terms|cookie-policy)\.html$ handler.php [END]
+
+# Compress text assets; photos and fonts are already compressed.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  # CSS and scripts receive content-versioned URLs from handler.php.
+  <FilesMatch "\.(?:css|js|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "\.(?:webp|avif|png|jpe?g|gif)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+  # Revalidate client settings and brand icons rather than serving stale values.
+  <FilesMatch "^(?:site-config\.js|favicon\.(?:svg|ico))$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

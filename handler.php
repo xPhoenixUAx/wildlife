@@ -157,6 +157,14 @@ function render_site_html(string $page, array $config): string {
     foreach ($xpath->query('//script[@src="config/site-config.js"]') as $script) {
         $script->setAttribute('src', 'config/site-config.js?v=' . $configVersion);
     }
+    // Version first-party CSS and scripts so deployment updates bypass old caches.
+    foreach (['css/visual-redesign.css', 'js/main.js', 'js/animations.js'] as $asset) {
+        $version = substr((string) hash_file('sha256', __DIR__ . '/' . $asset), 0, 16);
+        $attribute = str_ends_with($asset, '.css') ? 'href' : 'src';
+        foreach ($xpath->query('//*[@' . $attribute . '="' . $asset . '"]') as $element) {
+            $element->setAttribute($attribute, $asset . '?v=' . $version);
+        }
+    }
     $document->documentElement->setAttribute('data-config-rendered', 'true');
     $html = $document->saveHTML();
     if ($html === false) throw new RuntimeException('Page could not be rendered.');
@@ -223,7 +231,7 @@ function render_confirmation(string $brand, string $logo): never {
     $safeLogo = htmlspecialchars($logo, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $favicon = $safeLogo !== '' ? '<link rel="icon" href="' . $safeLogo . '">' : '';
     header('Content-Type: text/html; charset=utf-8');
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirm request | ' . $safeBrand . '</title>' . $favicon . '<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/legal.css"></head><body><main class="legal-main"><a class="legal-back" href="' . $returnTo . '#request">← Return to the form</a><h1>Confirm your request</h1><p>This confirmation protects the form when JavaScript is unavailable. Optional photographs must be reselected after returning to the form; they are not carried through this confirmation.</p><form method="post" action="handler.php">' . $hidden . '<input type="hidden" name="return_to" value="' . $returnTo . '"><input type="hidden" name="csrf_token" value="' . $token . '"><button class="button button--primary" type="submit">Confirm and send</button></form></main></body></html>';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirm request | ' . $safeBrand . '</title>' . $favicon . '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"><link rel="stylesheet" href="css/visual-redesign.css"></head><body><main class="legal-main"><a class="legal-back" href="' . $returnTo . '#request">← Return to the form</a><h1>Confirm your request</h1><p>This confirmation protects the form when JavaScript is unavailable. Optional photographs must be reselected after returning to the form; they are not carried through this confirmation.</p><form method="post" action="handler.php">' . $hidden . '<input type="hidden" name="return_to" value="' . $returnTo . '"><input type="hidden" name="csrf_token" value="' . $token . '"><button class="button button--primary" type="submit">Confirm and send</button></form></main></body></html>';
     exit;
 }
 
